@@ -21,9 +21,7 @@ namespace Proteomics.Utilities
         {
             return X < Y ? X : Y;
         }
-
-        static double INFINITE = 10000000;
- 
+         
         void push(List<List<int>> C, List<List<int>> F, int[] excess, int u, int v) {
                 int send = MIN(excess[u], C[u][v] - F[u][v]);
                 F[u][v] += send;

@@ -182,16 +182,31 @@ namespace Proteomics.Utilities
             }
         }
 
-        public static List<string> ConvertNA3ToAAs(string naSequence)
+        public static string StringReverse(string sequence)
+        {            
+            char[] sequence_array = sequence.ToCharArray();
+            Array.Reverse(sequence_array);
+            return new string(sequence_array);
+        }
+
+        public static List<string> ConvertNA3ToAAs(string naSequence, int shift, bool reverse)
         {
+            if (reverse)
+                naSequence = StringReverse(naSequence);
+
             List<string> sequences = new List<string>();
             sequences.Add("");
-            for (int i = 0; i + 3 < naSequence.Length; i += 3)
+            for (int i = shift; i + 3 < naSequence.Length; i += 3)
             {
                 List<string> newList = new List<string>();
                 foreach (string aa in ConvertNA3ToSingleAA(naSequence, i))
-                    foreach (string poss in sequences)
-                        newList.Add(poss + aa);
+                {
+                    if (aa.CompareTo("X") != 0)
+                    {
+                        foreach (string poss in sequences)
+                            newList.Add(poss + aa);
+                    }
+                }
                 if(newList.Count > 0)
                     sequences = newList;
             }
