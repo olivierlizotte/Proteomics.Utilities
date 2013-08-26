@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FDRizer2.cs" />
     <Compile Include="FDRizer.cs" />
     <Compile Include="FordFulkerson.cs" />
     <Compile Include="MaxQuant\MaxQuantNumerical.cs" />
