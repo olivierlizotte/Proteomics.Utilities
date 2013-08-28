@@ -187,7 +187,7 @@ namespace Proteomics.Utilities
             List<List<T>> missingResultsArray = new List<List<T>>();
             int[] missingDecoy = new int[helper.unSortedList.Count];
             int[] missingTarget = new int[helper.unSortedList.Count];
-            for (int index = 0; index < helper.unSortedList.Count; index++)
+            for (int index = 0; index < helper.Lists.Count; index++)
                 missingResultsArray.Add(new List<T>());
 
             int totalTarget = 0;
@@ -246,7 +246,7 @@ namespace Proteomics.Utilities
             helper.ReStart();
         }
 
-        public List<T> Launch(double desired_fdr, bool displayValues = true)
+        public List<T> Launch(double desired_fdr, bool displayValues = false)
         {
             //if(displayValues)
             //    Sol.CONSOLE.OutputLine("Optimizing scores to get maximum precursors at " + (100 * desired_fdr) + "% fdr");
