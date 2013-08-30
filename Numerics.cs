@@ -49,6 +49,11 @@ namespace Proteomics.Utilities
             return mz * Math.Abs(charge) - charge * Constants.PROTON_MASS;
         }
 
+        public static int ChargeFromMassAndMZ(double mass, double mz)
+        {
+            return (int)Math.Round(mass / mz);
+        }
+
         public static double MZFromMass(double mass, int charge)
         {
             return (mass + charge * Constants.PROTON_MASS) / Math.Abs(charge);
@@ -72,7 +77,7 @@ namespace Proteomics.Utilities
             }
             else if (massErrorUnits == MassToleranceUnits.ppm)
             {
-                return (experimental - theoretical) / theoretical * 1e6;
+                return ((experimental - theoretical) / theoretical) * 1e6;
             }
             else
             {
