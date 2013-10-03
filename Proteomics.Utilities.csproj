@@ -60,6 +60,18 @@
     <Reference Include="MathNet.Numerics.IO">
       <HintPath>..\packages\MathNet.Numerics.2.6.1\lib\net40\MathNet.Numerics.IO.dll</HintPath>
     </Reference>
+    <Reference Include="QuickGraph">
+      <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Data">
+      <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Graphviz">
+      <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Graphviz.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Serialization">
+      <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Serialization.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -73,12 +85,15 @@
     <Compile Include="FDRizer2.cs" />
     <Compile Include="FDRizer.cs" />
     <Compile Include="FordFulkerson.cs" />
+    <Compile Include="MaxFlowPrePush.cs" />
     <Compile Include="MaxQuant\MaxQuantNumerical.cs" />
+    <Compile Include="MinimumFlow.cs" />
     <Compile Include="NucleicAcid.cs" />
     <Compile Include="PolynomialRegression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Numerics.cs" />
     <Compile Include="PushRelabelMaximumFlow.cs" />
+    <Compile Include="QuickGraphMaxFlow.cs" />
     <Compile Include="Tools\vsCSV.cs" />
     <Compile Include="Tools\vsCSVWriter.cs" />
   </ItemGroup>
