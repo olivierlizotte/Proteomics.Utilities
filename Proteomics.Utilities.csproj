@@ -82,12 +82,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fasta\FastaRead.cs" />
     <Compile Include="FDRizer2.cs" />
     <Compile Include="FDRizer.cs" />
     <Compile Include="FordFulkerson.cs" />
+    <Compile Include="MascotReportAnalyser.cs" />
     <Compile Include="MaxFlowPrePush.cs" />
     <Compile Include="MaxQuant\MaxQuantNumerical.cs" />
     <Compile Include="MinimumFlow.cs" />
+    <Compile Include="MotifFindor.cs" />
     <Compile Include="NucleicAcid.cs" />
     <Compile Include="PolynomialRegression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
