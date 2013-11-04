@@ -39,7 +39,7 @@ namespace Proteomics.Utilities
                     }
                 }
             }
-            writer.writeToFile();
+            writer.WriteToFile();
         }
     }
 }

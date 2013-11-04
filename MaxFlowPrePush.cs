@@ -38,7 +38,7 @@ namespace Proteomics.Utilities
 
         private static long FindLocalMaximumFlow(List<double> fragRatio, List<long> fragments, long sumOfIntensities)
         {
-            long cumul = 1;
+            long nbCumul = 1;
             //Check if there is at least one common fragment
             bool isPresent = false;
             for (int i = 0; i < fragments.Count; i++)
@@ -46,17 +46,20 @@ namespace Proteomics.Utilities
                     isPresent = true;
             if (isPresent)
             {
+                double cumul = 0;
                 while (cumul <= sumOfIntensities)
                 {
+                    cumul = 0;
                     for (int i = 0; i < fragments.Count; i++)
                     {
-                        if (fragRatio[i] * cumul > fragments[i])
-                            return cumul;
+                        if (fragRatio[i] * nbCumul > fragments[i])
+                            return nbCumul;
+                        cumul += fragRatio[i] * nbCumul;
                     }
-                    cumul++;
+                    nbCumul++;
                 }
             }
-            return cumul;
+            return nbCumul;
         }
 
         private static void NormalizeList(List<double> list, double dividend)

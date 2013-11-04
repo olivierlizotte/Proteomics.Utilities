@@ -52,6 +52,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MathNet.Numerics">
@@ -88,6 +89,7 @@
     <Compile Include="FordFulkerson.cs" />
     <Compile Include="MascotReportAnalyser.cs" />
     <Compile Include="MaxFlowPrePush.cs" />
+    <Compile Include="MaxFlowSpectrumMatcher.cs" />
     <Compile Include="MaxQuant\MaxQuantNumerical.cs" />
     <Compile Include="MinimumFlow.cs" />
     <Compile Include="MotifFindor.cs" />

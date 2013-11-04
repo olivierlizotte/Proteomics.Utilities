@@ -59,7 +59,7 @@ namespace Proteomics.Utilities
             m_fileName = fileOutput;
         }
         
-        public bool writeToFile()
+        public bool WriteToFile()
         {
             try
             {

@@ -104,7 +104,7 @@ namespace Proteomics.Utilities
                 if (score > 2)
                     writer.AddLine(motif + "," + score);                
             }
-            writer.writeToFile();
+            writer.WriteToFile();
         }
 
         public static bool Score_LIR(string sequence, int i)
@@ -167,7 +167,7 @@ namespace Proteomics.Utilities
                     }
                 }
             }
-            writer.writeToFile();
+            writer.WriteToFile();
         }
     }
 }

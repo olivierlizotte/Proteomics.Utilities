@@ -135,7 +135,7 @@ namespace Proteomics.Utilities.Fasta
                     }
                 }
                 fs.Close();
-                writer.writeToFile();
+                writer.WriteToFile();
             }
             catch (System.Exception ex)
             {
@@ -202,7 +202,7 @@ namespace Proteomics.Utilities.Fasta
                 vsCSVWriter writer = new vsCSVWriter(csvFileOut);
                 foreach (long key in DicOfNb.Keys)
                     writer.AddLine(key + "," + DicOfNb[key]);
-                writer.writeToFile();
+                writer.WriteToFile();
             }
             catch (System.Exception ex)
             {
@@ -244,7 +244,7 @@ namespace Proteomics.Utilities.Fasta
                     }
                     writer.AddLine(lineMascot + strToAppend);
                 }
-                writer.writeToFile();
+                writer.WriteToFile();
             }
             catch (System.Exception ex)
             {
@@ -253,6 +253,63 @@ namespace Proteomics.Utilities.Fasta
             }
         }
 
+        public static void AppendProteinDescriptionToMascotReport(string csvMascotFile, string fastaFile, string csvFileOut)
+        {
+            vsCSV csvMascot = new vsCSV(csvMascotFile);
+            vsCSVWriter writer = new vsCSVWriter(csvFileOut);
+            try
+            {
+                FileStream fs;
+                try
+                {
+                    fs = new FileStream(fastaFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+                }
+                catch (System.Exception)
+                {
+                    fs = new FileStream(fastaFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                }
+
+                Dictionary<string, string> DicOfProt = new Dictionary<string, string>();
+                foreach (string line in csvMascot.LINES_LIST)
+                {
+                    string[] splits = line.Split(',');
+                    if (splits.Length > 2 && !DicOfProt.ContainsKey(splits[2]))
+                        DicOfProt.Add(splits[2], "");
+                }
+                using (StreamReader sr = new StreamReader(fs))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        if (line.StartsWith(">"))
+                        {
+                            string[] split = line.Substring(1).Split(' ');
+                            if(DicOfProt.ContainsKey(split[0]))
+                                DicOfProt[split[0]] = split[1];
+                        }
+                    }
+                }
+                foreach(string line in csvMascot.LINES_LIST)
+                {
+                    string[] splits = line.Split(',');
+                    string lineToWrite = line;
+                    if(splits.Length > 2 && DicOfProt.ContainsKey(splits[2]))
+                        lineToWrite += "," + DicOfProt[splits[2]];
+                    writer.AddLine(lineToWrite);
+                }
+                writer.WriteToFile();
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+        }
+        
+//            Proteomics.Utilities.Fasta.FastaRead.AppendProteinDescriptionToMascotReport(@"C:\Users\caronlio\Downloads\filtered peptides.csv",
+//                                                                                        @"C:\_IRIC\DATA\Tariq\peptideDb-minOcc60_WithReverse.fasta",
+//                                                                                        @"C:\Users\caronlio\Downloads\filtered peptides_WithProteinDescriptions.csv");
+//
         public static void AppendhCKSAAPToMascotReport(string txtHCKSAAPFile, string csvMascotFile, string csvFileOut)
         {
             vsCSV csvUbi = new vsCSV(txtHCKSAAPFile);
@@ -302,7 +359,7 @@ namespace Proteomics.Utilities.Fasta
                     }
                     writer.AddLine(lineMascot + strToAppend);
                 }
-                writer.writeToFile();
+                writer.WriteToFile();
             }
             catch (System.Exception ex)
             {
