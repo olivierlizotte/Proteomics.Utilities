@@ -187,17 +187,17 @@ namespace Proteomics.Utilities
             foreach (long item in expandedCapacity)
                 sumOfIntensities += item;
             /*
-            Console.WriteLine(" -=+ Error cumulated : " + (float)(errorCumul / (double)sumOfIntensities) * 100 + "% +=- ");
+            dbOptions.ConSole.WriteLine(" -=+ Error cumulated : " + (float)(errorCumul / (double)sumOfIntensities) * 100 + "% +=- ");
             
             foreach (List<double> solution in solutions)
             {
-                Console.WriteLine(" ----------------- --------------- ----------------- ------------------ ---------------- ");
-                Console.WriteLine("Max Flow computed (error of " + error / (double)(precision * precision) + ")");
+                dbOptions.ConSole.WriteLine(" ----------------- --------------- ----------------- ------------------ ---------------- ");
+                dbOptions.ConSole.WriteLine("Max Flow computed (error of " + error / (double)(precision * precision) + ")");
                 for (int i = 0; i < ratioNames.Count; i++)
-                    Console.WriteLine("     " + ratioNames[i] + " -> " + solution[i] / (double) precision + "");
+                    dbOptions.ConSole.WriteLine("     " + ratioNames[i] + " -> " + solution[i] / (double) precision + "");
             }
-            Console.WriteLine(" ----------------- --------------- ----------------- ------------------ ---------------- ");
-            Console.WriteLine("Number of solutions : " + solutions.Count);
+            dbOptions.ConSole.WriteLine(" ----------------- --------------- ----------------- ------------------ ---------------- ");
+            dbOptions.ConSole.WriteLine("Number of solutions : " + solutions.Count);
             //*/
             List<double> result = new List<double>();
             double sumResultRatios = 0;

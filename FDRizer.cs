@@ -952,7 +952,7 @@ namespace Proteomics.Utilities
             helper.ReStart();
         }
 
-        public List<T> Launch(double desired_fdr, bool displayValues = false)
+        public List<T> Launch(double desired_fdr)//, bool displayValues = false)
         {
             //if(displayValues)
             //    Sol.CONSOLE.OutputLine("Optimizing scores to get maximum precursors at " + (100 * desired_fdr) + "% fdr");
@@ -982,17 +982,17 @@ namespace Proteomics.Utilities
             }
             if (targets <= 0 || decoys / (double)targets > desired_fdr)
                 result = new List<T>();
-
+            /*
             if (displayValues)
             {
-                Console.WriteLine(" === Score impact distribution === ");
+                dbOptions.ConSole.WriteLine(" === Score impact distribution === ");
                 for (int i = 0; i < helper.Indexes.Count; i++)
                 {
                     double ratio = helper.Indexes[i] / (double)helper.unSortedList.Count;
                     double reverseRatio = helper.ReverseIndexes[i] / (double)helper.unSortedList.Count;
-                    Console.WriteLine(">    " + i + ": " + ratio + " (" + reverseRatio + ")");
-                }//*/
-            }
+                    dbOptions.ConSole.WriteLine(">    " + i + ": " + ratio + " (" + reverseRatio + ")");
+                }
+            }//*/
             return result;
         }
     }

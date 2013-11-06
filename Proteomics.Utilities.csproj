@@ -87,6 +87,7 @@
     <Compile Include="FDRizer2.cs" />
     <Compile Include="FDRizer.cs" />
     <Compile Include="FordFulkerson.cs" />
+    <Compile Include="Interfaces\IConSol.cs" />
     <Compile Include="MascotReportAnalyser.cs" />
     <Compile Include="MaxFlowPrePush.cs" />
     <Compile Include="MaxFlowSpectrumMatcher.cs" />
