@@ -7,7 +7,7 @@ namespace Proteomics.Utilities
 {
     public interface IConSol
     {
-        void WriteLine(string line);
+        void WriteLine(string line);        
     }
 
     public class ConSolCommandLine : IConSol
