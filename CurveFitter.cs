@@ -100,7 +100,7 @@ namespace Proteomics.Utilities
             for (int i = 0; i < xdata.Length; i++)
                 xNormed[i] = xdata[i] * omega;
             
-            coeff = Fit.Polynomial(xdata, ydata, 3);
+            coeff = Fit.Polynomial(xdata, ydata, 2);
 
             return AreaUnderTheCurve(minTime, maxTime, coeff);
         }
