@@ -285,7 +285,7 @@ namespace Proteomics.Utilities.Fasta
                         {
                             string[] split = line.Substring(1).Split(' ');
                             if(DicOfProt.ContainsKey(split[0]))
-                                DicOfProt[split[0]] = split[1];
+                                DicOfProt[split[0]] = line.Substring(split[0].Length + 1);
                         }
                     }
                 }

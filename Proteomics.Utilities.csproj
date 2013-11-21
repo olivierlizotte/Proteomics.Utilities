@@ -83,6 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CurveFitter.cs" />
     <Compile Include="Fasta\FastaRead.cs" />
     <Compile Include="FDRizer2.cs" />
     <Compile Include="FDRizer.cs" />
