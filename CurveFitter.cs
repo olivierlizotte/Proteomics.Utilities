@@ -72,14 +72,17 @@ namespace Proteomics.Utilities
         public static double AreaUnderTheCurve(double xTimeStart, double timeStop, double[] coefficients)
         {
             double cumul = 0.0;
-            double iterSize = (timeStop - xTimeStart) / 100.0;
-            for (double timePoint = xTimeStart; timePoint <= timeStop; timePoint += iterSize)
+            if (timeStop > xTimeStart)
             {
-                double localIntensity = Evaluate.Polynomial(timePoint, coefficients);
-                if (localIntensity > 0)
-                    cumul += localIntensity * iterSize;
-                //else
-                //    break;
+                double iterSize = (timeStop - xTimeStart) / 100.0;
+                for (double timePoint = xTimeStart; timePoint <= timeStop; timePoint += iterSize)
+                {
+                    double localIntensity = Evaluate.Polynomial(timePoint, coefficients);
+                    if (localIntensity > 0)
+                        cumul += localIntensity * iterSize;
+                    //else
+                    //    break;
+                }
             }
             return cumul;
         }
