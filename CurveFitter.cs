@@ -87,6 +87,34 @@ namespace Proteomics.Utilities
             return cumul;
         }
 
+        public static double AreaUnderTheCurve(IList<double> xTime, IList<double> yIntensity)
+        {
+            MathNet.Numerics.Interpolation.IInterpolation interpole = MathNet.Numerics.Interpolation.Interpolate.LinearBetweenPoints(xTime, yIntensity);
+            
+            double minTime = double.MaxValue;
+            double maxTime = double.MinValue;
+            foreach (double val in xTime)
+            {
+                if (val > maxTime)
+                    maxTime = val;
+                if (val < minTime)
+                    minTime = val;
+            }           
+            return interpole.Integrate(maxTime);
+            /*
+            double iterSize = (maxTime - minTime) / 100.0;
+            for(double i = minTime; i <= maxTime; i += iterSize)
+            {
+                double localIntensity = interpole.Integrate(maxTime);Evaluate.Polynomial(timePoint, coefficients);
+                    if (localIntensity > 0)
+                        cumul += localIntensity * iterSize;
+                    //else
+                    //    break;
+                }
+            }
+            return cumul;//*/
+        }
+
         public static double FitToPolynomial(double[] xdata, double[] ydata, out double[] coeff)
         {
             double minTime = double.MaxValue;

@@ -61,23 +61,32 @@ namespace Proteomics.Utilities
         
         public bool WriteToFile()
         {
-            try
+            int fileTries = 2;
+            while (fileTries > 0)
             {
-                using (StreamWriter sw = new StreamWriter(m_fileName))
+                try
                 {
-                    if(! string.IsNullOrEmpty(m_strTitle) )
-                        sw.WriteLine(m_strTitle);
-                    foreach (string line in m_strLines)
-                        sw.WriteLine(line);
-                    sw.Close();
-                }
+                    if (!System.IO.Directory.Exists(vsCSV.GetFolder(m_fileName)))
+                        System.IO.Directory.CreateDirectory(vsCSV.GetFolder(m_fileName));
 
+                    using (StreamWriter sw = new StreamWriter(m_fileName))
+                    {
+                        if (!string.IsNullOrEmpty(m_strTitle))
+                            sw.WriteLine(m_strTitle);
+                        foreach (string line in m_strLines)
+                            sw.WriteLine(line);
+                        sw.Close();
+                    }
+                    return true;
+                }
+                catch (System.Exception)
+                {
+                    m_fileName = vsCSV.GetFolder(m_fileName) + vsCSV.GetFileName_NoExtension(m_fileName) + "_" + (new Random()).Next() + ".csv";                    
+                    fileTries--;
+                }
             }
-            catch (System.Exception)
-            {
-                return false;
-            }
-            return true;
+
+            return false;
         }
     }
 }
