@@ -101,6 +101,7 @@
     <Compile Include="Numerics.cs" />
     <Compile Include="PushRelabelMaximumFlow.cs" />
     <Compile Include="QuickGraphMaxFlow.cs" />
+    <Compile Include="Tools\AminoAcidTools.cs" />
     <Compile Include="Tools\vsCSV.cs" />
     <Compile Include="Tools\vsCSVWriter.cs" />
   </ItemGroup>

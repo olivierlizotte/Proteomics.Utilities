@@ -211,6 +211,263 @@ namespace Proteomics.Utilities.Fasta
             }
         }
 
+        public enum ProteinIdType { Forward, Reverse, Unknown };
+
+        public static void SeparateForwardAndReverse(string fastaFile)
+        {
+            try
+            {
+                FileStream fs;
+                try
+                {
+                    fs = new FileStream(fastaFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+                }
+                catch (System.Exception)
+                {
+                    fs = new FileStream(fastaFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                }
+
+                vsCSVWriter wrForward = new vsCSVWriter(vsCSV.GetFolder(fastaFile) + vsCSV.GetFileName_NoExtension(fastaFile) + "_ForwardOnly.fasta");
+                vsCSVWriter wrReverse = new vsCSVWriter(vsCSV.GetFolder(fastaFile) + vsCSV.GetFileName_NoExtension(fastaFile) + "_ReverseOnly.fasta");
+
+                using (StreamReader sr = new StreamReader(fs))
+                {
+                    ProteinIdType idType = ProteinIdType.Unknown;
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        if(line.StartsWith(">"))
+                        {
+                            if (line.StartsWith(">REVERSE_"))
+                                idType = ProteinIdType.Reverse;
+                            else
+                                idType = ProteinIdType.Forward;
+                        }
+                        switch (idType)
+                        {
+                            case ProteinIdType.Forward: wrForward.AddLine(line); break;
+                            case ProteinIdType.Reverse: wrReverse.AddLine(line); break;
+                            case ProteinIdType.Unknown: break;
+                        }
+                    }
+                }
+                fs.Close();
+                wrForward.WriteToFile();
+                wrReverse.WriteToFile();
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+        }
+
+        public static void MergeSequences(string fastaFolder)
+        {
+            try
+            {
+
+                FileStream fsOut = new FileStream(fastaFolder + "merge.fasta", FileMode.CreateNew);
+                using (StreamWriter sw = new StreamWriter(fsOut))
+                {
+
+                    foreach (string fastaFile in Directory.EnumerateFiles(fastaFolder))
+                    {
+                        FileStream fs;
+                        try
+                        {
+                            fs = new FileStream(fastaFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+                        }
+                        catch (System.Exception)
+                        {
+                            fs = new FileStream(fastaFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        }
+                        using (StreamReader sr = new StreamReader(fs))
+                        {
+                            ProteinIdType idType = ProteinIdType.Unknown;
+                            string line;
+                            while ((line = sr.ReadLine()) != null)
+                            {
+                                if (!string.IsNullOrEmpty(line))
+                                    sw.WriteLine(line);
+                            }
+                        }
+                        fs.Close();
+                    }
+                }
+                fsOut.Close();
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+        }
+
+        public static void ShuffleSequences(string fastaFile)
+        {
+            try
+            {
+                FileStream fs;
+                try
+                {
+                    fs = new FileStream(fastaFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+                }
+                catch (System.Exception)
+                {
+                    fs = new FileStream(fastaFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                }
+
+                vsCSVWriter wrShuffled = new vsCSVWriter(vsCSV.GetFolder(fastaFile) + vsCSV.GetFileName_NoExtension(fastaFile) + "_Shuffled.fasta");
+
+                using (StreamReader sr = new StreamReader(fs))
+                {
+                    ProteinIdType idType = ProteinIdType.Unknown;
+                    string line;
+                    string aaSeq = "";
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        if (line.StartsWith(">"))
+                        {
+                            if (!string.IsNullOrEmpty(aaSeq))
+                                wrShuffled.AddLine(Proteomics.Utilities.Tools.AminoAcidTools.Shuffle(aaSeq));
+                            wrShuffled.AddLine(line);
+                            aaSeq = "";
+                        }
+                        else
+                            aaSeq += line;
+                    }
+
+                    if (!string.IsNullOrEmpty(aaSeq))
+                        wrShuffled.AddLine(Proteomics.Utilities.Tools.AminoAcidTools.Shuffle(aaSeq));
+                }
+                fs.Close();
+                wrShuffled.WriteToFile();
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+        }
+
+        public static void FastaQToSmallFasta(string fastaQFileFilePath)
+        {
+            try
+            {
+                Dictionary<int, Dictionary<string, int>> dicOfSeq = new Dictionary<int, Dictionary<string, int>>();
+                int nbFiles = 0;
+                foreach (string fastaQFile in Directory.EnumerateFiles(fastaQFileFilePath))
+                {
+                    if (fastaQFile.EndsWith(".fasta") && !fastaQFile.Contains("_Reduced") && !fastaQFile.Contains("_Shuffled"))
+                    {
+                        nbFiles++;
+                        FileStream fs;
+                        try
+                        {
+                            fs = new FileStream(fastaQFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+                        }
+                        catch (System.Exception)
+                        {
+                            fs = new FileStream(fastaQFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        }
+
+                        using (StreamReader sr = new StreamReader(fs))
+                        {
+                            string pastSeq = "";
+                            string pastHeader = "";
+                            string line;
+                            while ((line = sr.ReadLine()) != null)
+                            {
+                                if (line.StartsWith("@"))
+                                {
+                                    if (!dicOfSeq.ContainsKey(pastSeq.Length))
+                                        dicOfSeq.Add(pastSeq.Length, new Dictionary<string, int>());
+
+                                    if (dicOfSeq[pastSeq.Length].ContainsKey(pastSeq))
+                                        dicOfSeq[pastSeq.Length][pastSeq]++;
+                                    else                                    
+                                        dicOfSeq[pastSeq.Length].Add(pastSeq, 1);
+                                    
+                                    pastHeader = ">" + line.Substring(1);
+                                    pastSeq = "";
+                                }
+                                else
+                                    pastSeq += line;
+                            }
+                            if (dicOfSeq[pastSeq.Length].ContainsKey(pastSeq))
+                                dicOfSeq[pastSeq.Length][pastSeq]++;
+                            else
+                                dicOfSeq[pastSeq.Length].Add(pastSeq, 1);
+                            GC.Collect();
+                            GC.Collect();
+                        }
+                        fs.Close();
+                        
+                        //Compress lists in dictionary
+                        List<int> sizeKeys = new List<int>(dicOfSeq.Keys);
+                        sizeKeys.Sort();
+                        /*
+                        foreach (int size in sizeKeys)
+                        {
+                            List<string> seqKeys = new List<string>(dicOfSeq[size].Keys);
+                            foreach (string seq in seqKeys)
+                            {
+                                bool isSeen = false;
+                                foreach(int size2 in sizeKeys)
+                                {
+                                    if(size2 > size)
+                                    {
+                                        foreach(string seq2 in dicOfSeq[size2].Keys)
+                                            if(seq2.Contains(seq))
+                                            {
+                                                isSeen = true;
+                                                break;
+                                            }
+                                        if (isSeen)
+                                            break;
+                                    }
+                                }
+                                if (isSeen)
+                                    dicOfSeq[size].Remove(seq);
+                            }
+                        }//*/
+
+                        //Keep only common items
+                        foreach(int size in sizeKeys)
+                        {
+                            List<string> seqKeys = new List<string>(dicOfSeq[size].Keys);
+                            foreach (string key in seqKeys)
+                                if (dicOfSeq[size][key] < nbFiles * 0.16)
+                                    dicOfSeq[size].Remove(key);
+                        }
+                    }
+                }
+                long idProt = 0;
+                FileStream fw = new FileStream(fastaQFileFilePath + "NA_Commonome_Poisson.fasta", FileMode.Create, FileAccess.Write);
+                using(StreamWriter wr = new StreamWriter(fw))
+                {
+                    foreach(int size in dicOfSeq.Keys)
+                        foreach (string key in dicOfSeq[size].Keys)
+                        {
+                            if (key.Length >= 18)
+                            {
+                                idProt++;
+                                wr.WriteLine(">" + idProt);
+                                //wr.WriteLine(dicOfSeq[size][key]);
+                                wr.WriteLine(key);
+                            }
+                        }
+                }
+                fw.Close();
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+        }
+
         public static void AppendUbiPredToMascotReport(string csvUbiFile, string csvMascotFile, string csvFileOut)
         {
             vsCSV csvUbi = new vsCSV(csvUbiFile);
