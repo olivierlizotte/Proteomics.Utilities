@@ -88,9 +88,26 @@ namespace Proteomics.Utilities
         }
 
         public static double AreaUnderTheCurve(IList<double> xTime, IList<double> yIntensity)
-        {
-            MathNet.Numerics.Interpolation.IInterpolation interpole = MathNet.Numerics.Interpolation.Interpolate.LinearBetweenPoints(xTime, yIntensity);
-            
+        {            
+            //MathNet.Numerics.Interpolation.IInterpolation interpole = MathNet.Numerics.Interpolation.Interpolate.LinearBetweenPoints(xTime, yIntensity);
+
+            try
+            {
+            MathNet.Numerics.Interpolation.IInterpolation interpole = new MathNet.Numerics.Interpolation.Algorithms.AkimaSplineInterpolation(xTime, yIntensity);
+            //MathNet.Numerics.Interpolation.IInterpolation interpole = new MathNet.Numerics.Interpolation.Algorithms.CubicSplineInterpolation(xTime, yIntensity);
+            double maxTime = 0;
+            for (int i = 0; i < xTime.Count; i++)
+                if (xTime[i] > maxTime && yIntensity[i] > 0.0)
+                    maxTime = xTime[i];
+                if (interpole.SupportsIntegration && maxTime > 0)
+                    return interpole.Integrate(maxTime);
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return 0;
+            //MathNet.Numerics.Interpolation.IInterpolation interpole = MathNet.Numerics.Interpolation.Interpolate.(xTime, yIntensity);
+            /*
             double minTime = double.MaxValue;
             double maxTime = double.MinValue;
             foreach (double val in xTime)
@@ -99,7 +116,7 @@ namespace Proteomics.Utilities
                     maxTime = val;
                 if (val < minTime)
                     minTime = val;
-            }           
+            }
             return interpole.Integrate(maxTime);
             /*
             double iterSize = (maxTime - minTime) / 100.0;

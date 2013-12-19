@@ -32,7 +32,7 @@ namespace Proteomics.Utilities.Methods
             foreach (Dictionary<double, double> unit in units)
                 localFlows.Add(FindLocalMaxima(unit, mixed));
 
-            Dictionary<double, double> virtualMixed = BuildVirtualDic(localFlows, units);
+            Dictionary<double, double> virtualMixed = BuildVirtualDic(localFlows, units, mixed.Count);
             double overError = ComputeOver(virtualMixed, mixed);
             double underError = ComputeUnder(virtualMixed, mixed);
 
@@ -75,7 +75,7 @@ namespace Proteomics.Utilities.Methods
                     if (localFlows[bestUnit] < 0)
                         localFlows[bestUnit] = 0.0;
 
-                    virtualMixed = BuildVirtualDic(localFlows, units);
+                    virtualMixed = BuildVirtualDic(localFlows, units, mixed.Count);
                     overError = ComputeOver(virtualMixed, mixed);
                     underError = ComputeUnder(virtualMixed, mixed);
                 }
@@ -98,7 +98,7 @@ namespace Proteomics.Utilities.Methods
             foreach (Dictionary<double, double> unit in units)
                 localFlows.Add(FindLocalMaxima(unit, mixed));
 
-            Dictionary<double, double> virtualMixed = BuildVirtualDic(localFlows, units);
+            Dictionary<double, double> virtualMixed = BuildVirtualDic(localFlows, units, mixed.Count);
             double overError = ComputeOver(virtualMixed, mixed);
             double underError = ComputeUnder(virtualMixed, mixed);
             double[] bestIndexes = new double[units.Count];
@@ -118,7 +118,7 @@ namespace Proteomics.Utilities.Methods
                     {
                         localFlows[i] -= iterSize;
 
-                        virtualMixed = BuildVirtualDic(localFlows, units);
+                        virtualMixed = BuildVirtualDic(localFlows, units, mixed.Count);
                         double tmpErrorOver = ComputeOver(virtualMixed, mixed);
                         double tmpErrorUnder = ComputeUnder(virtualMixed, mixed);
 
@@ -155,7 +155,11 @@ namespace Proteomics.Utilities.Methods
                         if (bestIndexes[index] >= worstFlowRate)
                         {
                             if (iterChoice == iterNb)
+                            {
                                 localFlows[index] -= iterSize;
+                                if (localFlows[index] < 0)
+                                    localFlows[index] = 0.0;
+                            }
                             iterNb++;
                         }
                     iterSize = 1;
@@ -163,7 +167,7 @@ namespace Proteomics.Utilities.Methods
                 else
                     iterSize++;
 
-                virtualMixed = BuildVirtualDic(localFlows, units);
+                virtualMixed = BuildVirtualDic(localFlows, units, mixed.Count);
                 overError = ComputeOver(virtualMixed, mixed);
                 underError = ComputeUnder(virtualMixed, mixed);
                 if (overError + underError < bestOverallError)
@@ -180,9 +184,9 @@ namespace Proteomics.Utilities.Methods
             underflow = underError;
         }
 
-        private static Dictionary<double, double> BuildVirtualDic(List<double> ratios, List<Dictionary<double, double>> units)
+        private static Dictionary<double, double> BuildVirtualDic(List<double> ratios, List<Dictionary<double, double>> units, int size)
         {
-            Dictionary<double, double> virtualMixed = new Dictionary<double, double>();
+            Dictionary<double, double> virtualMixed = new Dictionary<double, double>(size);
             for (int i = 0; i < ratios.Count; i++)
             {
                 foreach (double key in units[i].Keys)

@@ -93,6 +93,7 @@
     <Compile Include="MaxFlowPrePush.cs" />
     <Compile Include="MaxFlowSpectrumMatcher.cs" />
     <Compile Include="MaxQuant\MaxQuantNumerical.cs" />
+    <Compile Include="Methods\Curve.cs" />
     <Compile Include="Methods\GradientDescent.cs" />
     <Compile Include="MinimumFlow.cs" />
     <Compile Include="MotifFindor.cs" />

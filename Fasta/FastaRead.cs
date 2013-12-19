@@ -267,11 +267,11 @@ namespace Proteomics.Utilities.Fasta
             try
             {
 
-                FileStream fsOut = new FileStream(fastaFolder + "merge.fasta", FileMode.CreateNew);
+                FileStream fsOut = new FileStream(fastaFolder + "merge3.fasta", FileMode.CreateNew);
                 using (StreamWriter sw = new StreamWriter(fsOut))
                 {
 
-                    foreach (string fastaFile in Directory.EnumerateFiles(fastaFolder))
+                    foreach (string fastaFile in Directory.EnumerateFiles(fastaFolder, "whole_genome.fasta"))
                     {
                         FileStream fs;
                         try
