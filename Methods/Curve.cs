@@ -40,8 +40,9 @@ namespace Proteomics.Utilities.Methods
                             times.Add(timePoint, 1);
                         else
                             times[timePoint]++;
-
-                foreach(double key in times.Keys)
+                List<double> sortedTime = new List<double>(times.Keys);
+                sortedTime.Sort();
+                foreach (double key in sortedTime)
                     if (times[key] > 1)
                     {
                         double cumulIntensity = 0.0;
@@ -111,7 +112,9 @@ namespace Proteomics.Utilities.Methods
             // -- Test curve fitting function -- //
             theCurve.time = new List<double>();
             theCurve.intensityCount = new List<double>();
-            foreach (double time in dicOfTimeInMsVsIntensityPerMs.Keys)
+            List<double> sortedKeys = new List<double>(dicOfTimeInMsVsIntensityPerMs.Keys);
+            sortedKeys.Sort();
+            foreach (double time in sortedKeys)
             {
                 theCurve.time.Add(time);
                 theCurve.intensityCount.Add(dicOfTimeInMsVsIntensityPerMs[time]);
@@ -124,10 +127,18 @@ namespace Proteomics.Utilities.Methods
         {
             if (time != null && time.Count > 4)
             {
-                if(interpole == null)
-                    //interpole = new MathNet.Numerics.Interpolation.Algorithms.CubicSplineInterpolation(time, intensityCount);
-                    interpole = new MathNet.Numerics.Interpolation.Algorithms.AkimaSplineInterpolation(time, intensityCount);
-                    //interpole = MathNet.Numerics.Interpolation.Interpolate.LinearBetweenPoints(time, intensityCount);
+                if (interpole == null)
+                {
+                    try
+                    {
+                        //interpole = new MathNet.Numerics.Interpolation.Algorithms.CubicSplineInterpolation(time, intensityCount);
+                        interpole = new MathNet.Numerics.Interpolation.Algorithms.AkimaSplineInterpolation(time, intensityCount);
+                        //interpole = MathNet.Numerics.Interpolation.Interpolate.LinearBetweenPoints(time, intensityCount);
+                    }catch(Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                }
                 double intensity = interpole.Interpolate(timePoint);
                 if (intensity < 0)
                     return 0;
@@ -175,9 +186,17 @@ namespace Proteomics.Utilities.Methods
             {
                 time = new List<double>();
                 intensityCount = new List<double>();
+                time.Add(newTimePoint);
+                intensityCount.Add(newIntensityPerMilliSeconds);
             }
-            time.Add(newTimePoint);
-            intensityCount.Add(newIntensityPerMilliSeconds);
+            else
+                if (time[time.Count - 1] < newTimePoint)
+                {
+                    time.Add(newTimePoint);
+                    intensityCount.Add(newIntensityPerMilliSeconds);
+                }
+                else
+                    Console.WriteLine("UnSorted timepoint inserted");
         }
     }
 }

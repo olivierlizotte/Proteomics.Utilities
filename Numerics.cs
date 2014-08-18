@@ -10,7 +10,12 @@ namespace Proteomics.Utilities
 {
     public static class Constants
     {
+        public const double HYDROGEN_MASS = 1.007825;
+        public const double OXYGEN_MASS = 15.994915;
+        public const double NITROGEN_MASS = 14.003074;
+        public const double CARBON_MASS = 12.0;
         public const double PROTON_MASS = 1.00727647;
+        public const double AMONIA_MASS = 17.026549;
         public const double C12_C13_MASS_DIFFERENCE = 1.0033548378;
         public const double WATER_MONOISOTOPIC_MASS = 18.0105646942;
         public const double WATER_AVERAGE_MASS = 18.01528;
